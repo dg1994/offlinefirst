@@ -1,0 +1,2 @@
+rootProject.name='OfflineFirst'
+include ':app'
