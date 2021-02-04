@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">OfflineFirst</string>
+    <string name="add_comment">Add</string>
+    <string name="hint_comment">comment</string>
+</resources>
