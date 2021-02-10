@@ -1,6 +1,7 @@
 package com.example.offlinefirst.di;
 
 import com.example.offlinefirst.workmanager.ChildWorkerFactory;
+import com.example.offlinefirst.workmanager.CommentSaveWorker;
 import com.example.offlinefirst.workmanager.CommentSyncWorker;
 
 import dagger.Binds;
@@ -12,5 +13,10 @@ public abstract class WorkerModule {
     @Binds
     @IntoMap
     @WorkerKey(CommentSyncWorker.class)
-    public abstract ChildWorkerFactory bindWorkerFactory(CommentSyncWorker.Factory worker);
+    public abstract ChildWorkerFactory bindSyncWorkerFactory(CommentSyncWorker.Factory worker);
+
+    @Binds
+    @IntoMap
+    @WorkerKey(CommentSaveWorker.class)
+    public abstract ChildWorkerFactory bindSaveWorkerFactory(CommentSaveWorker.Factory worker);
 }

@@ -1,6 +1,8 @@
 package com.example.offlinefirst.domain.repository;
 
 import androidx.paging.DataSource;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import com.example.offlinefirst.model.Comment;
 
@@ -8,6 +10,8 @@ import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class BaseCommentRepository {
     private LocalCommentRepository localCommentRepository;
@@ -23,6 +27,10 @@ public class BaseCommentRepository {
         return localCommentRepository.add(chatId, commentText)
                 .flatMapCompletable(comment -> remoteCommentRepository.sync(comment));
     }
+
+//    private void observeWorkManagerTask() {
+//        WorkManager
+//    }
 
     public List<Comment> getComments(long chatId, int requestLoadSize) {
         return localCommentRepository.getComments(chatId, requestLoadSize);

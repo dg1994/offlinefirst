@@ -56,7 +56,6 @@ public class CommentViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
                     Log.d(TAG, "comment added ");
-                    commentDataSourceFactory.refresh();
                     },
                         t -> Log.e(TAG, "add comment error : " + t)
                 )
@@ -64,19 +63,11 @@ public class CommentViewModel extends ViewModel {
     }
 
     /**
-     * Exposes the latest comments so the UI can observe it
+     * Exposes the latest comments so that UI can observe it
      */
     public LiveData<PagedList<Comment>> getComments() {
         return commentsLiveData;
     }
-
-    /*public void loadComments() {
-        disposable.add(commentRepository.getComments(CHAT_ID)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(value -> commentsLiveData.setValue(Resource.success(value)),
-                        t -> Log.e(TAG, "get comments error : " + t)));
-    }*/
 
     /**
      * Delete the comment
