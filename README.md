@@ -9,3 +9,4 @@ Components used -
 4. RxJava
 5. Dagger
 6. Paging
+7. WorkManager
