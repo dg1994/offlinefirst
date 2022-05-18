@@ -2,4 +2,13 @@
     <string name="app_name">OfflineFirst</string>
     <string name="add_comment">Add</string>
     <string name="hint_comment">comment</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="register">Register</string>
+    <string name="email_field">Email</string>
+    <string name="field_username">Username</string>
+    <string name="field_password">Password</string>
+    <string name="field_confirm_password">Confirm Password</string>
+    <string name="field_register">Register</string>
+    <string name="field_login">Login</string>
 </resources>

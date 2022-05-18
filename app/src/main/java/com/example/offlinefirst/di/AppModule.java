@@ -6,6 +6,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.offlinefirst.R;
+import com.example.offlinefirst.network.auth.AuthApiService;
 import com.example.offlinefirst.network.main.CommentApi;
 import com.example.offlinefirst.utils.Constants;
 
