@@ -1,25 +1,28 @@
 package com.example.offlinefirst.ui.auth
 
+import android.app.Activity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import com.example.offlinefirst.R
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.example.offlinefirst.network.Resource
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.fragment_register.*
 
 class RegisterFragment : BaseAuthFragment() {
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        auth = FirebaseAuth.getInstance()
     }
 
     override fun onCreateView(
@@ -29,14 +32,39 @@ class RegisterFragment : BaseAuthFragment() {
         return inflater.inflate(R.layout.fragment_register, container, false)
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RegisterFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeUserAuthenticationState()
+        register_button.setOnClickListener {
+            registerUser()
+        }
+    }
+
+    private fun observeUserAuthenticationState() {
+        viewModel.observeAuthState().observe(viewLifecycleOwner, Observer { response ->
+            when(response.status) {
+                Resource.Status.SUCCESS -> {
+                    Log.d("success", "registered successfully")
+                }
+                Resource.Status.ERROR -> {
+                    Log.d("error", "registeration failed")
+                }
+                Resource.Status.LOADING -> {
+                    Log.d("loading", "loading")
                 }
             }
+        })
+    }
+
+    private fun registerUser() {
+
+        val email: String = input_email.text.toString()
+        val password: String = input_password.text.toString()
+
+        if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(activity, "Please fill all the fields", Toast.LENGTH_LONG).show()
+        } else {
+            viewModel.registerUserWithFirebase(email, password)
+        }
     }
 }

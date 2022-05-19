@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.RequestManager;
 import com.example.offlinefirst.interfaces.ActionListener;
 import com.example.offlinefirst.model.Comment;
+import com.example.offlinefirst.ui.BaseActivity;
 import com.example.offlinefirst.ui.CommentsRecyclerAdapter;
 import com.example.offlinefirst.viewmodel.ViewModelProviderFactory;
 import com.example.offlinefirst.viewmodel.main.CommentViewModel;
@@ -23,7 +24,7 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
 
-public class MainActivity extends DaggerAppCompatActivity implements View.OnClickListener, ActionListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, ActionListener {
 
     @Inject
     ViewModelProviderFactory providerFactory;

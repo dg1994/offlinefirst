@@ -28,10 +28,6 @@ public class BaseCommentRepository {
                 .flatMapCompletable(comment -> remoteCommentRepository.sync(comment));
     }
 
-//    private void observeWorkManagerTask() {
-//        WorkManager
-//    }
-
     public List<Comment> getComments(long chatId, int requestLoadSize) {
         return localCommentRepository.getComments(chatId, requestLoadSize);
     }

@@ -7,8 +7,7 @@ import androidx.room.migration.Migration;
 
 import com.example.offlinefirst.db.CommentDao;
 import com.example.offlinefirst.db.OfflineCommentDatabase;
-import com.example.offlinefirst.db.auth.AccountPropertiesDao;
-import com.example.offlinefirst.db.auth.AuthTokenDao;
+import com.example.offlinefirst.db.auth.UserDao;
 
 import javax.inject.Singleton;
 
@@ -36,13 +35,7 @@ public class RoomModule {
 
     @Singleton
     @Provides
-    static AuthTokenDao provideAuthTokenDao(OfflineCommentDatabase db) {
-        return db.authTokenDao();
-    }
-
-    @Singleton
-    @Provides
-    static AccountPropertiesDao provideAccountPropertiesDao(OfflineCommentDatabase db) {
-        return db.accountPropertiesDao();
+    static UserDao provideUserDao(OfflineCommentDatabase db) {
+        return db.userDao();
     }
 }

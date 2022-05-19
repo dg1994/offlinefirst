@@ -6,9 +6,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.offlinefirst.R;
-import com.example.offlinefirst.network.auth.AuthApiService;
 import com.example.offlinefirst.network.main.CommentApi;
 import com.example.offlinefirst.utils.Constants;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;
 
@@ -23,11 +25,23 @@ public class AppModule {
 
     @Singleton
     @Provides
-    static Retrofit provideRetrofitInstance(){
+    static FirebaseAuth provideFirebaseAuth() {
+        return FirebaseAuth.getInstance();
+    }
+
+    @Singleton
+    @Provides
+    static Gson provideGsonBuilder() {
+        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    }
+
+    @Singleton
+    @Provides
+    static Retrofit provideRetrofitInstance(Gson gson){
         return new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
 

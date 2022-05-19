@@ -3,14 +3,9 @@ package com.example.offlinefirst.di;
 import android.app.Application;
 
 import com.example.offlinefirst.db.CommentDao;
-import com.example.offlinefirst.db.auth.AccountPropertiesDao;
-import com.example.offlinefirst.db.auth.AuthTokenDao;
 import com.example.offlinefirst.domain.repository.BaseCommentRepository;
 import com.example.offlinefirst.domain.repository.LocalCommentRepository;
 import com.example.offlinefirst.domain.repository.RemoteCommentRepository;
-import com.example.offlinefirst.domain.repository.auth.AuthRepository;
-import com.example.offlinefirst.network.auth.AuthApiService;
-import com.example.offlinefirst.session.SessionManager;
 
 import javax.inject.Singleton;
 
