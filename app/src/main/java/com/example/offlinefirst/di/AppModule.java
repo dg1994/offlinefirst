@@ -1,6 +1,8 @@
 package com.example.offlinefirst.di;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -8,7 +10,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.offlinefirst.R;
 import com.example.offlinefirst.network.main.CommentApi;
 import com.example.offlinefirst.utils.Constants;
+import com.example.offlinefirst.utils.PreferenceKeys;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -27,6 +31,12 @@ public class AppModule {
     @Provides
     static FirebaseAuth provideFirebaseAuth() {
         return FirebaseAuth.getInstance();
+    }
+
+    @Singleton
+    @Provides
+    static FirebaseFirestore provideFirebaseFirestore() {
+        return FirebaseFirestore.getInstance();
     }
 
     @Singleton
@@ -64,5 +74,17 @@ public class AppModule {
     @Provides
     static CommentApi provideCommentApi(Retrofit retrofit){
         return retrofit.create(CommentApi.class);
+    }
+
+    @Singleton
+    @Provides
+    static SharedPreferences provideSharedPreferences(Application application) {
+        return application.getSharedPreferences(PreferenceKeys.APP_PREFERENCES, Context.MODE_PRIVATE);
+    }
+
+    @Singleton
+    @Provides
+    static SharedPreferences.Editor provideSharedPrefsEditor(SharedPreferences sharedPreferences) {
+        return sharedPreferences.edit();
     }
 }

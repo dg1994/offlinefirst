@@ -32,7 +32,7 @@ public interface CommentDao {
     List<Comment> getCommentsAfter(long chatId, long key, int requestLoadSize);
 
     @Query("SELECT * FROM comment WHERE id = :commentId")
-    Comment getComment(long commentId);
+    Comment getComment(String commentId);
 
     @Query("SELECT * FROM comment WHERE chat_id = :chatId ORDER BY timestamp DESC")
     DataSource.Factory<Integer, Comment> allComments(long chatId);

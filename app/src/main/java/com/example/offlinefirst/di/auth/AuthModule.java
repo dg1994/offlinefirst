@@ -1,5 +1,7 @@
 package com.example.offlinefirst.di.auth;
 
+import android.content.SharedPreferences;
+
 import com.example.offlinefirst.db.auth.UserDao;
 import com.example.offlinefirst.domain.repository.auth.AuthRepository;
 import com.example.offlinefirst.network.auth.AuthService;
@@ -8,7 +10,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit2.Retrofit;
 
 @Module
 public class AuthModule {
@@ -24,7 +25,9 @@ public class AuthModule {
     static AuthRepository provideAuthRepository(
             SessionManager sessionManager,
             UserDao userDao,
-            AuthService authService){
-        return new AuthRepository(userDao, authService, sessionManager);
+            AuthService authService,
+            SharedPreferences sharedPreferences,
+            SharedPreferences.Editor sharedPreferencesEditor){
+        return new AuthRepository(userDao, authService, sessionManager, sharedPreferences, sharedPreferencesEditor);
     }
 }

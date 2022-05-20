@@ -11,6 +11,10 @@ import androidx.paging.PagedList;
 import com.example.offlinefirst.domain.datasource.CommentDataSourceFactory;
 import com.example.offlinefirst.model.Comment;
 import com.example.offlinefirst.domain.repository.BaseCommentRepository;
+import com.example.offlinefirst.model.User;
+import com.example.offlinefirst.network.Resource;
+import com.example.offlinefirst.session.SessionManager;
+import com.example.offlinefirst.utils.Event;
 
 import javax.inject.Inject;
 
@@ -28,11 +32,17 @@ public class CommentViewModel extends ViewModel {
     private CommentDataSourceFactory commentDataSourceFactory;
     private LiveData<PagedList<Comment>> commentsLiveData = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
+    private SessionManager sessionManager;
 
     @Inject
-    public CommentViewModel(BaseCommentRepository commentRepository, CommentDataSourceFactory commentDataSourceFactory) {
+    public CommentViewModel(
+            BaseCommentRepository commentRepository,
+            CommentDataSourceFactory commentDataSourceFactory,
+            SessionManager sessionManager
+    ) {
         this.commentRepository = commentRepository;
         this.commentDataSourceFactory = commentDataSourceFactory;
+        this.sessionManager = sessionManager;
         initPaging();
     }
 
@@ -78,6 +88,14 @@ public class CommentViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> Log.d(TAG, "comment deleted "),
                         t -> Log.e(TAG, "delete comment error : " + t)));
+    }
+
+    public void logout() {
+        sessionManager.logout();
+    }
+
+    public LiveData<Event<Resource<User>>> observeAuthState() {
+        return sessionManager.getCachedUser();
     }
 
     @Override

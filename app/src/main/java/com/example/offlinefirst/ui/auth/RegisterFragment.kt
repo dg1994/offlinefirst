@@ -42,7 +42,8 @@ class RegisterFragment : BaseAuthFragment() {
 
     private fun observeUserAuthenticationState() {
         viewModel.observeAuthState().observe(viewLifecycleOwner, Observer { response ->
-            when(response.status) {
+            val userResource = response.getContentIfNotHandled()
+            when(userResource?.status) {
                 Resource.Status.SUCCESS -> {
                     Log.d("success", "registered successfully")
                 }

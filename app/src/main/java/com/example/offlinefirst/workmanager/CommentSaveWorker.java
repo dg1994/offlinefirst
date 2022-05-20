@@ -1,6 +1,7 @@
 package com.example.offlinefirst.workmanager;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -26,7 +27,8 @@ public class CommentSaveWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        long commentId = getInputData().getLong(Constants.KEY_COMMENT_ID, 1);
+        String commentId = getInputData().getString(Constants.KEY_COMMENT_ID);
+        Log.d("comment save worker", commentId);
         boolean syncPending = getInputData().getBoolean(Constants.KEY_COMMENT_SYNC_PENDING, false);
         Comment comment = localCommentRepository.getComment(commentId);
         Comment updatedComment = CommentUtils.clone(comment, syncPending);

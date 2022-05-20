@@ -88,7 +88,7 @@ public class CommentsRecyclerAdapter extends PagedListAdapter<Comment, CommentsR
 
         @Override
         public boolean areItemsTheSame(@NonNull Comment oldItem, @NonNull Comment newItem) {
-            return oldItem.getId() == newItem.getId();
+            return oldItem.getId().equals(newItem.getId());
         }
 
         @Override

@@ -44,7 +44,7 @@ public class RemoteCommentRepository {
         return Completable.fromAction(() -> {
             Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
             Data data = new Data.Builder()
-                    .putLong(Constants.KEY_COMMENT_ID, comment.getId())
+                    .putString(Constants.KEY_COMMENT_ID, comment.getId())
                     .build();
             OneTimeWorkRequest syncRequest = new OneTimeWorkRequest.Builder(CommentSyncWorker.class)
                     .setInputData(data)
@@ -83,7 +83,7 @@ public class RemoteCommentRepository {
                 });
     }
 
-    private boolean isSyncPending(long commentId) {
+    private boolean isSyncPending(String commentId) {
         try {
             boolean running = false;
             WorkManager instance = WorkManager.getInstance(context);

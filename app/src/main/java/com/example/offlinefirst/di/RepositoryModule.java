@@ -1,6 +1,7 @@
 package com.example.offlinefirst.di;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import com.example.offlinefirst.db.CommentDao;
 import com.example.offlinefirst.domain.repository.BaseCommentRepository;
@@ -17,8 +18,10 @@ public class RepositoryModule {
 
     @Singleton
     @Provides
-    LocalCommentRepository provideLocalCommentRepository(CommentDao commentDao) {
-        return new LocalCommentRepository(commentDao);
+    LocalCommentRepository provideLocalCommentRepository(
+            CommentDao commentDao,
+            SharedPreferences sharedPreferences) {
+        return new LocalCommentRepository(commentDao,  sharedPreferences);
     }
 
     @Singleton

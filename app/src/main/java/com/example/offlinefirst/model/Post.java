@@ -1,8 +1,10 @@
 package com.example.offlinefirst.model;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@IgnoreExtraProperties
 public class Post {
 
     @SerializedName("userId")

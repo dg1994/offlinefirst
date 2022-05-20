@@ -1,6 +1,7 @@
 package com.example.offlinefirst;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,10 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.RequestManager;
 import com.example.offlinefirst.interfaces.ActionListener;
 import com.example.offlinefirst.model.Comment;
+import com.example.offlinefirst.model.User;
+import com.example.offlinefirst.network.Resource;
 import com.example.offlinefirst.ui.BaseActivity;
 import com.example.offlinefirst.ui.CommentsRecyclerAdapter;
+import com.example.offlinefirst.ui.auth.AuthActivity;
 import com.example.offlinefirst.viewmodel.ViewModelProviderFactory;
 import com.example.offlinefirst.viewmodel.main.CommentViewModel;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -47,6 +53,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         initViews();
         initRecyclerView();
         commentViewModel = ViewModelProviders.of(this, providerFactory).get(CommentViewModel.class);
+        commentViewModel.observeAuthState().observe(this, response -> {
+            Resource<User> userResource = response.getContentIfNotHandled();
+            if (userResource != null) {
+                if (userResource.data == null) {
+                    navAuthActivity();
+                }
+            }
+        });
         commentViewModel.getComments().observe(this, comments -> commentsRecyclerAdapter.submitList(comments));
     }
 
@@ -98,5 +112,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onCommentDelete(Comment comment) {
         commentViewModel.deleteComment(comment);
+    }
+
+    private void navAuthActivity(){
+        Intent intent = new Intent(this, AuthActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
