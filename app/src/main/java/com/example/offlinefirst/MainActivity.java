@@ -18,20 +18,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
 import com.example.offlinefirst.interfaces.ActionListener;
-import com.example.offlinefirst.model.Comment;
+import com.example.offlinefirst.model.Message;
 import com.example.offlinefirst.model.User;
 import com.example.offlinefirst.network.Resource;
 import com.example.offlinefirst.ui.BaseActivity;
-import com.example.offlinefirst.ui.CommentsRecyclerAdapter;
+import com.example.offlinefirst.ui.MessagesRecyclerAdapter;
 import com.example.offlinefirst.ui.auth.AuthActivity;
 import com.example.offlinefirst.viewmodel.ViewModelProviderFactory;
-import com.example.offlinefirst.viewmodel.main.CommentViewModel;
-
-import java.util.Objects;
+import com.example.offlinefirst.viewmodel.main.MessageViewModel;
 
 import javax.inject.Inject;
-
-import dagger.android.support.DaggerAppCompatActivity;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, ActionListener {
 
@@ -42,11 +38,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     RequestManager requestManager;
 
     @Inject
-    CommentsRecyclerAdapter commentsRecyclerAdapter;
+    MessagesRecyclerAdapter messagesRecyclerAdapter;
 
-    private CommentViewModel commentViewModel;
-    private AppCompatEditText commentText;
-    private AppCompatButton commentBtn;
+    private MessageViewModel messageViewModel;
+    private AppCompatEditText messageText;
+    private AppCompatButton messageBtn;
     private RecyclerView recyclerView;
 
     @Override
@@ -55,8 +51,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_main);
         initViews();
         initRecyclerView();
-        commentViewModel = new ViewModelProvider(this, providerFactory).get(CommentViewModel.class);
-        commentViewModel.observeAuthState().observe(this, response -> {
+        messageViewModel = new ViewModelProvider(this, providerFactory).get(MessageViewModel.class);
+        messageViewModel.observeAuthState().observe(this, response -> {
             Resource<User> userResource = response.getContentIfNotHandled();
             if (userResource != null) {
                 if (userResource.data == null) {
@@ -64,8 +60,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
             }
         });
-        commentViewModel.getComments().observe(this, comments -> commentsRecyclerAdapter.submitList(comments));
-        commentViewModel.listenChatMessages().observe(this, comments -> {});
+        messageViewModel.getMessages().observe(this, messages -> messagesRecyclerAdapter.submitList(messages));
+        messageViewModel.listenChatMessages().observe(this, messages -> {});
     }
 
     private void initRecyclerView() {
@@ -74,9 +70,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         RecyclerView.LayoutManager recyclerViewLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
 
-        recyclerView.setAdapter(commentsRecyclerAdapter);
-        commentsRecyclerAdapter.setActionListener(this);
-        commentsRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        recyclerView.setAdapter(messagesRecyclerAdapter);
+        messagesRecyclerAdapter.setActionListener(this);
+        messagesRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 if (positionStart == 0) {
                     recyclerViewLayoutManager.scrollToPosition(0);
@@ -86,20 +82,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initViews() {
-        commentText = findViewById(R.id.comment_text);
-        commentBtn = findViewById(R.id.comment_btn);
-        recyclerView = findViewById(R.id.comments_recycler);
-        commentBtn.setOnClickListener(this);
+        messageText = findViewById(R.id.message_text);
+        messageBtn = findViewById(R.id.message_btn);
+        recyclerView = findViewById(R.id.messages_recycler);
+        messageBtn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.comment_btn : {
+            case R.id.message_btn : {
                 hideKeyboard();
-                if (!TextUtils.isEmpty(commentText.getText())) {
-                    commentViewModel.addComment(commentText.getText().toString());
-                    commentText.getText().clear();
+                if (!TextUtils.isEmpty(messageText.getText())) {
+                    messageViewModel.addMessage(messageText.getText().toString());
+                    messageText.getText().clear();
                 }
                 break;
             }
@@ -114,8 +110,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
-    public void onCommentDelete(Comment comment) {
-        commentViewModel.deleteComment(comment);
+    public void onMessageDelete(Message message) {
+        messageViewModel.deleteMessage(message);
     }
 
     private void navAuthActivity(){

@@ -10,12 +10,11 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.firebase.firestore.Exclude;
-import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
 
 @Entity
-public class Comment implements Parcelable {
+public class Message implements Parcelable {
 
     @PrimaryKey
     @NonNull
@@ -38,10 +37,10 @@ public class Comment implements Parcelable {
     @ColumnInfo(name= "from")
     private String from;
 
-    public Comment() {}
+    public Message() {}
 
     @Ignore
-    public Comment(@NotNull String id, long chatId, String text, String from) {
+    public Message(@NotNull String id, long chatId, String text, String from) {
         this.id = id;
         this.chatId = chatId;
         this.text = text;
@@ -50,7 +49,7 @@ public class Comment implements Parcelable {
         this.syncPending = true;
     }
 
-    public Comment(@NotNull String id, long chatId, String text, long timestamp, boolean syncPending, String from) {
+    public Message(@NotNull String id, long chatId, String text, long timestamp, boolean syncPending, String from) {
         this.id = id;
         this.chatId = chatId;
         this.text = text;
@@ -59,7 +58,7 @@ public class Comment implements Parcelable {
         this.from = from;
     }
 
-    protected Comment(Parcel in) {
+    protected Message(Parcel in) {
         id = in.readString();
         chatId = in.readLong();
         text = in.readString();
@@ -83,15 +82,15 @@ public class Comment implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Comment> CREATOR = new Creator<Comment>() {
+    public static final Creator<Message> CREATOR = new Creator<Message>() {
         @Override
-        public Comment createFromParcel(Parcel in) {
-            return new Comment(in);
+        public Message createFromParcel(Parcel in) {
+            return new Message(in);
         }
 
         @Override
-        public Comment[] newArray(int size) {
-            return new Comment[size];
+        public Message[] newArray(int size) {
+            return new Message[size];
         }
     };
 
@@ -149,8 +148,8 @@ public class Comment implements Parcelable {
         if (obj == this)
             return true;
 
-        Comment comment = (Comment) obj;
-        return comment.id.equals(this.id)
-                && comment.syncPending == this.syncPending;
+        Message message = (Message) obj;
+        return message.id.equals(this.id)
+                && message.syncPending == this.syncPending;
     }
 }

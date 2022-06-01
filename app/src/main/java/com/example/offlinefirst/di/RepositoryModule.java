@@ -3,10 +3,10 @@ package com.example.offlinefirst.di;
 import android.app.Application;
 import android.content.SharedPreferences;
 
-import com.example.offlinefirst.db.CommentDao;
-import com.example.offlinefirst.domain.repository.BaseCommentRepository;
-import com.example.offlinefirst.domain.repository.LocalCommentRepository;
-import com.example.offlinefirst.domain.repository.RemoteCommentRepository;
+import com.example.offlinefirst.db.MessageDao;
+import com.example.offlinefirst.domain.repository.BaseMessageRepository;
+import com.example.offlinefirst.domain.repository.LocalMessageRepository;
+import com.example.offlinefirst.domain.repository.RemoteMessageRepository;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import javax.inject.Singleton;
@@ -19,22 +19,22 @@ public class RepositoryModule {
 
     @Singleton
     @Provides
-    LocalCommentRepository provideLocalCommentRepository(
-            CommentDao commentDao,
+    LocalMessageRepository provideLocalMessageRepository(
+            MessageDao messageDao,
             SharedPreferences sharedPreferences) {
-        return new LocalCommentRepository(commentDao,  sharedPreferences);
+        return new LocalMessageRepository(messageDao, sharedPreferences);
     }
 
     @Singleton
     @Provides
-    RemoteCommentRepository provideRemoteCommentRepository(Application application, FirebaseFirestore firestore) {
-        return new RemoteCommentRepository(application.getApplicationContext(), firestore);
+    RemoteMessageRepository provideRemoteMessageRepository(Application application, FirebaseFirestore firestore) {
+        return new RemoteMessageRepository(application.getApplicationContext(), firestore);
     }
 
     @Singleton
     @Provides
-    BaseCommentRepository provideBaseCommentRepository(LocalCommentRepository localCommentRepository,
-                                                       RemoteCommentRepository remoteCommentRepository) {
-        return new BaseCommentRepository(localCommentRepository, remoteCommentRepository);
+    BaseMessageRepository provideBaseMessageRepository(LocalMessageRepository localMessageRepository,
+                                                       RemoteMessageRepository remoteMessageRepository) {
+        return new BaseMessageRepository(localMessageRepository, remoteMessageRepository);
     }
 }

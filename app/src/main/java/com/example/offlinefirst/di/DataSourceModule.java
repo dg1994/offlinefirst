@@ -1,8 +1,8 @@
 package com.example.offlinefirst.di;
 
-import com.example.offlinefirst.domain.datasource.CommentDataSource;
-import com.example.offlinefirst.domain.datasource.CommentDataSourceFactory;
-import com.example.offlinefirst.domain.repository.BaseCommentRepository;
+import com.example.offlinefirst.domain.datasource.MessageDataSource;
+import com.example.offlinefirst.domain.datasource.MessageDataSourceFactory;
+import com.example.offlinefirst.domain.repository.BaseMessageRepository;
 
 import javax.inject.Singleton;
 
@@ -14,13 +14,13 @@ public class DataSourceModule {
 
     @Singleton
     @Provides
-    CommentDataSource provideCommentDataSource(BaseCommentRepository baseCommentRepository) {
-        return new CommentDataSource(baseCommentRepository);
+    MessageDataSource provideMessageDataSource(BaseMessageRepository baseMessageRepository) {
+        return new MessageDataSource(baseMessageRepository);
     }
 
     @Singleton
     @Provides
-    CommentDataSourceFactory provideCommentDataSourceFactory(CommentDataSource commentDataSource) {
-        return new CommentDataSourceFactory(commentDataSource);
+    MessageDataSourceFactory provideMessageDataSourceFactory(MessageDataSource messageDataSource) {
+        return new MessageDataSourceFactory(messageDataSource);
     }
 }

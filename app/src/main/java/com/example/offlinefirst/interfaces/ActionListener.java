@@ -1,7 +1,7 @@
 package com.example.offlinefirst.interfaces;
 
-import com.example.offlinefirst.model.Comment;
+import com.example.offlinefirst.model.Message;
 
 public interface ActionListener {
-    void onCommentDelete(Comment comment);
+    void onMessageDelete(Message message);
 }

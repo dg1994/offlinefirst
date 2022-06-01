@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.offlinefirst.R;
-import com.example.offlinefirst.network.main.CommentApi;
 import com.example.offlinefirst.utils.Constants;
 import com.example.offlinefirst.utils.PreferenceKeys;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,12 +67,6 @@ public class AppModule {
     static RequestManager provideGlideInstance(Application application, RequestOptions requestOptions){
         return Glide.with(application)
                 .setDefaultRequestOptions(requestOptions);
-    }
-
-    @Singleton
-    @Provides
-    static CommentApi provideCommentApi(Retrofit retrofit){
-        return retrofit.create(CommentApi.class);
     }
 
     @Singleton

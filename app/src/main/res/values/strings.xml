@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">OfflineFirst</string>
     <string name="add_comment">Add</string>
-    <string name="hint_comment">comment</string>
+    <string name="hint_comment">message</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="register">Register</string>

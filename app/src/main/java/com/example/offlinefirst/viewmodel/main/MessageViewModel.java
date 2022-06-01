@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModel;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
-import com.example.offlinefirst.domain.datasource.CommentDataSourceFactory;
-import com.example.offlinefirst.model.Comment;
-import com.example.offlinefirst.domain.repository.BaseCommentRepository;
+import com.example.offlinefirst.domain.datasource.MessageDataSourceFactory;
+import com.example.offlinefirst.model.Message;
+import com.example.offlinefirst.domain.repository.BaseMessageRepository;
 import com.example.offlinefirst.model.User;
 import com.example.offlinefirst.network.Resource;
 import com.example.offlinefirst.session.SessionManager;
@@ -26,24 +26,24 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.example.offlinefirst.utils.Constants.CHAT_ID;
 
-public class CommentViewModel extends ViewModel {
+public class MessageViewModel extends ViewModel {
 
-    private static final String TAG = "CommentViewModel";
+    private static final String TAG = "MessageViewModel";
 
-    private BaseCommentRepository commentRepository;
-    private CommentDataSourceFactory commentDataSourceFactory;
-    private LiveData<PagedList<Comment>> commentsLiveData = new MutableLiveData<>();
+    private BaseMessageRepository messageRepository;
+    private MessageDataSourceFactory messageDataSourceFactory;
+    private LiveData<PagedList<Message>> messagesLiveData = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
     private SessionManager sessionManager;
 
     @Inject
-    public CommentViewModel(
-            BaseCommentRepository commentRepository,
-            CommentDataSourceFactory commentDataSourceFactory,
+    public MessageViewModel(
+            BaseMessageRepository messageRepository,
+            MessageDataSourceFactory messageDataSourceFactory,
             SessionManager sessionManager
     ) {
-        this.commentRepository = commentRepository;
-        this.commentDataSourceFactory = commentDataSourceFactory;
+        this.messageRepository = messageRepository;
+        this.messageDataSourceFactory = messageDataSourceFactory;
         this.sessionManager = sessionManager;
         initPaging();
     }
@@ -55,41 +55,41 @@ public class CommentViewModel extends ViewModel {
                         .setPageSize(10)
                         .build();
 
-        //commentsLiveData = new LivePagedListBuilder<>(commentDataSourceFactory, pagedListConfig).build();
-        commentsLiveData = new LivePagedListBuilder<>(commentRepository.allComments(CHAT_ID), pagedListConfig).build();
+        //messagesLiveData = new LivePagedListBuilder<>(messageDataSourceFactory, pagedListConfig).build();
+        messagesLiveData = new LivePagedListBuilder<>(messageRepository.allMessages(CHAT_ID), pagedListConfig).build();
     }
 
     /**
-     * Adds new comment
+     * Adds new message
      */
-    public void addComment(String commentText) {
-        disposable.add(commentRepository.add(CHAT_ID, commentText)
+    public void addMessage(String messageText) {
+        disposable.add(messageRepository.add(CHAT_ID, messageText)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                    Log.d(TAG, "comment added ");
+                    Log.d(TAG, "message added ");
                     },
-                        t -> Log.e(TAG, "add comment error : " + t)
+                        t -> Log.e(TAG, "add message error : " + t)
                 )
         );
     }
 
     /**
-     * Exposes the latest comments so that UI can observe it
+     * Exposes the latest messages so that UI can observe it
      */
-    public LiveData<PagedList<Comment>> getComments() {
-        return commentsLiveData;
+    public LiveData<PagedList<Message>> getMessages() {
+        return messagesLiveData;
     }
 
     /**
      * Delete the comment
      */
-    public void deleteComment(Comment comment) {
-        disposable.add(commentRepository.delete(comment)
+    public void deleteMessage(Message message) {
+        disposable.add(messageRepository.delete(message)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> Log.d(TAG, "comment deleted "),
-                        t -> Log.e(TAG, "delete comment error : " + t)));
+                .subscribe(() -> Log.d(TAG, "message deleted "),
+                        t -> Log.e(TAG, "delete message error : " + t)));
     }
 
     public void logout() {
@@ -100,15 +100,15 @@ public class CommentViewModel extends ViewModel {
         return sessionManager.getCachedUser();
     }
 
-    public LiveData<List<Comment>> listenChatMessages() {
-        return commentRepository.listenChatMessages();
+    public LiveData<List<Message>> listenChatMessages() {
+        return messageRepository.listenChatMessages();
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
         disposable.clear();
-        //commentDataSourceFactory.getCommentDataSource().clear();
+        //messageDataSourceFactory.getMessageDataSource().clear();
     }
 
 }

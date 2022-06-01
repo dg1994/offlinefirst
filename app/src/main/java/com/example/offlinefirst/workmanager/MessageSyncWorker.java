@@ -7,8 +7,8 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.example.offlinefirst.model.Comment;
-import com.example.offlinefirst.domain.repository.LocalCommentRepository;
+import com.example.offlinefirst.domain.repository.LocalMessageRepository;
+import com.example.offlinefirst.model.Message;
 import com.example.offlinefirst.utils.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,16 +21,16 @@ import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 
-public class CommentSyncWorker extends Worker {
+public class MessageSyncWorker extends Worker {
 
-    public static final String TAG = "CommentSyncWorker";
-    private LocalCommentRepository localCommentRepository;
+    public static final String TAG = "MessageSyncWorker";
+    private LocalMessageRepository localMessageRepository;
     private FirebaseFirestore firestore;
 
-    public CommentSyncWorker(LocalCommentRepository localCommentRepository, FirebaseFirestore firestore,
+    public MessageSyncWorker(LocalMessageRepository localMessageRepository, FirebaseFirestore firestore,
                              Context context, WorkerParameters workerParams) {
         super(context, workerParams);
-        this.localCommentRepository = localCommentRepository;
+        this.localMessageRepository = localMessageRepository;
         this.firestore = firestore;
     }
 
@@ -38,20 +38,20 @@ public class CommentSyncWorker extends Worker {
     @Override
     public Result doWork() {
 
-        String commentId = getInputData().getString(Constants.KEY_COMMENT_ID);
-        Comment comment = localCommentRepository.getComment(commentId);
+        String messageId = getInputData().getString(Constants.KEY_COMMENT_ID);
+        Message message = localMessageRepository.getMessage(messageId);
 
         final Result[] result = {Result.retry()};
         CountDownLatch countDownLatch = new CountDownLatch(1);
         if (!isStopped()) {
-            DocumentReference newCommentRef = firestore.collection("chats")
+            DocumentReference newMessageRef = firestore.collection("chats")
                     .document();
 
-            newCommentRef.set(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
+            newMessageRef.set(message).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull @NotNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        result[0] = Result.success(createOutputData(commentId, false));
+                        result[0] = Result.success(createOutputData(messageId, false));
                     } else {
                         result[0] = Result.retry();
                     }
@@ -74,9 +74,9 @@ public class CommentSyncWorker extends Worker {
         super.onStopped();
     }
 
-    private Data createOutputData(String commentId, boolean syncPending){
+    private Data createOutputData(String messageId, boolean syncPending){
         return new Data.Builder()
-                .putString(Constants.KEY_COMMENT_ID, commentId)
+                .putString(Constants.KEY_COMMENT_ID, messageId)
                 .putBoolean(Constants.KEY_COMMENT_SYNC_PENDING, syncPending)
                 .build();
     }
@@ -84,18 +84,18 @@ public class CommentSyncWorker extends Worker {
 
     public static class Factory implements ChildWorkerFactory {
 
-        private LocalCommentRepository localCommentRepository;
+        private LocalMessageRepository localMessageRepository;
         private FirebaseFirestore firestore;
 
         @Inject
-        public Factory(LocalCommentRepository localCommentRepository, FirebaseFirestore firestore){
-            this.localCommentRepository = localCommentRepository;
+        public Factory(LocalMessageRepository localMessageRepository, FirebaseFirestore firestore){
+            this.localMessageRepository = localMessageRepository;
             this.firestore = firestore;
         }
 
         @Override
         public Worker create(Context appContext, WorkerParameters params) {
-            return new CommentSyncWorker(localCommentRepository, firestore, appContext, params);
+            return new MessageSyncWorker(localMessageRepository, firestore, appContext, params);
         }
     }
 }
