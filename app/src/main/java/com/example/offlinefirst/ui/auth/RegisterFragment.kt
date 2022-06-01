@@ -18,11 +18,8 @@ import kotlinx.android.synthetic.main.fragment_register.*
 
 class RegisterFragment : BaseAuthFragment() {
 
-    private lateinit var auth: FirebaseAuth
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = FirebaseAuth.getInstance()
     }
 
     override fun onCreateView(
@@ -48,7 +45,7 @@ class RegisterFragment : BaseAuthFragment() {
                     Log.d("success", "registered successfully")
                 }
                 Resource.Status.ERROR -> {
-                    Log.d("error", "registeration failed")
+                    Log.d("error", "registration failed")
                 }
                 Resource.Status.LOADING -> {
                     Log.d("loading", "loading")

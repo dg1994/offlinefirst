@@ -11,4 +11,5 @@
     <string name="field_confirm_password">Confirm Password</string>
     <string name="field_register">Register</string>
     <string name="field_login">Login</string>
+    <string name="logout">Logout</string>
 </resources>

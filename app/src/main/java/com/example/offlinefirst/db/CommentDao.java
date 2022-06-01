@@ -19,6 +19,9 @@ public interface CommentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long add(Comment comment);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    List<Long> addAll(List<Comment> comment);
+
     @Update
     void update(Comment comment);
 

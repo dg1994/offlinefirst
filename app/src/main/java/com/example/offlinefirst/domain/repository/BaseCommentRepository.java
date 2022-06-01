@@ -1,5 +1,10 @@
 package com.example.offlinefirst.domain.repository;
 
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
@@ -43,5 +48,14 @@ public class BaseCommentRepository {
     public Completable delete(Comment comment) {
         return remoteCommentRepository.stopSync(comment)
                 .andThen(Completable.defer(() -> localCommentRepository.delete(comment)));
+    }
+
+    public LiveData<List<Comment>> listenChatMessages() {
+        MediatorLiveData<List<Comment>> messagesLiveData = new MediatorLiveData<>();
+        MutableLiveData<List<Comment>> firestoreSource = remoteCommentRepository.listenFirestoreDb();
+        messagesLiveData.addSource(firestoreSource, comments -> {
+            localCommentRepository.addAll(comments);
+        });
+        return messagesLiveData;
     }
 }

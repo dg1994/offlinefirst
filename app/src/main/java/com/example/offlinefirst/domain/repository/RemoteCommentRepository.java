@@ -3,8 +3,11 @@ package com.example.offlinefirst.domain.repository;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
+import androidx.lifecycle.MutableLiveData;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
 import androidx.work.Data;
@@ -20,9 +23,20 @@ import com.example.offlinefirst.utils.Constants;
 import com.example.offlinefirst.utils.LiveDataObservable;
 import com.example.offlinefirst.workmanager.CommentSaveWorker;
 import com.example.offlinefirst.workmanager.CommentSyncWorker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -32,11 +46,13 @@ import io.reactivex.Observable;
 public class RemoteCommentRepository {
 
     private Context context;
+    private FirebaseFirestore firestoreDb;
     private static final String SYNC_TAG = "comment-sync";
     private static final String SAVE_TAG = "comment-save";
 
-    public RemoteCommentRepository(Context applicationContext) {
+    public RemoteCommentRepository(Context applicationContext, FirebaseFirestore firestoreDb) {
         context = applicationContext;
+        this.firestoreDb = firestoreDb;
     }
 
     public Completable sync(Comment comment) {
@@ -99,5 +115,28 @@ public class RemoteCommentRepository {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public MutableLiveData<List<Comment>> listenFirestoreDb() {
+        MutableLiveData<List<Comment>> chatLiveData = new MutableLiveData<>();
+        firestoreDb.collection("chats").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.d("RemoteCommentRepository", "got error while fetching" + error.getMessage());
+                } else {
+                    if (value != null) {
+                        List<Comment> commentList = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : value) {
+                            Comment comment = document.toObject(Comment.class);
+                            commentList.add(comment);
+                        }
+                        chatLiveData.setValue(commentList);
+                        Log.d("RemoteCommentRepository", "value  set");
+                    }
+                }
+            }
+        });
+        return chatLiveData;
     }
 }

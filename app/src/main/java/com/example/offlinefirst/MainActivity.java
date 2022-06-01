@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,7 +55,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_main);
         initViews();
         initRecyclerView();
-        commentViewModel = ViewModelProviders.of(this, providerFactory).get(CommentViewModel.class);
+        commentViewModel = new ViewModelProvider(this, providerFactory).get(CommentViewModel.class);
         commentViewModel.observeAuthState().observe(this, response -> {
             Resource<User> userResource = response.getContentIfNotHandled();
             if (userResource != null) {
@@ -62,6 +65,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
         });
         commentViewModel.getComments().observe(this, comments -> commentsRecyclerAdapter.submitList(comments));
+        commentViewModel.listenChatMessages().observe(this, comments -> {});
     }
 
     private void initRecyclerView() {
@@ -118,5 +122,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Intent intent = new Intent(this, AuthActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.logout:
+                sessionManager.logout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

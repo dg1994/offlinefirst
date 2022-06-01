@@ -7,6 +7,7 @@ import com.example.offlinefirst.db.CommentDao;
 import com.example.offlinefirst.domain.repository.BaseCommentRepository;
 import com.example.offlinefirst.domain.repository.LocalCommentRepository;
 import com.example.offlinefirst.domain.repository.RemoteCommentRepository;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import javax.inject.Singleton;
 
@@ -26,8 +27,8 @@ public class RepositoryModule {
 
     @Singleton
     @Provides
-    RemoteCommentRepository provideRemoteCommentRepository(Application application) {
-        return new RemoteCommentRepository(application.getApplicationContext());
+    RemoteCommentRepository provideRemoteCommentRepository(Application application, FirebaseFirestore firestore) {
+        return new RemoteCommentRepository(application.getApplicationContext(), firestore);
     }
 
     @Singleton

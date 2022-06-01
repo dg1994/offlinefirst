@@ -9,6 +9,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.firestore.Exclude;
 import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,12 +30,15 @@ public class Comment implements Parcelable {
     @ColumnInfo(name = "timestamp")
     private long timestamp;
 
+    @Exclude
     @ColumnInfo(name = "sync_pending")
     private boolean syncPending;
 
     //ideally should be user id
     @ColumnInfo(name= "from")
     private String from;
+
+    public Comment() {}
 
     @Ignore
     public Comment(@NotNull String id, long chatId, String text, String from) {
@@ -123,6 +127,7 @@ public class Comment implements Parcelable {
         this.timestamp = timestamp;
     }
 
+    @Exclude
     public boolean isSyncPending() {
         return syncPending;
     }

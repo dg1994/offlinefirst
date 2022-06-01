@@ -16,6 +16,8 @@ import com.example.offlinefirst.network.Resource;
 import com.example.offlinefirst.session.SessionManager;
 import com.example.offlinefirst.utils.Event;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -96,6 +98,10 @@ public class CommentViewModel extends ViewModel {
 
     public LiveData<Event<Resource<User>>> observeAuthState() {
         return sessionManager.getCachedUser();
+    }
+
+    public LiveData<List<Comment>> listenChatMessages() {
+        return commentRepository.listenChatMessages();
     }
 
     @Override

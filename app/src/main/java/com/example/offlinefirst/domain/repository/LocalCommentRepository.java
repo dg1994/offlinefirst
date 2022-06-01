@@ -15,6 +15,8 @@ import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class LocalCommentRepository {
 
@@ -42,6 +44,19 @@ public class LocalCommentRepository {
             Log.d(TAG, "comment added " + rowId);
             return comment;
         });
+    }
+
+    public void addAll(List<Comment> comments) {
+        Single.fromCallable(() -> {
+            List<Long> rows = commentDao.addAll(comments);
+            return rows;
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((commentRows) -> {
+                            Log.d(TAG, "comments added ");
+                        },
+                        t -> Log.e(TAG, "add comments error : " + t));
     }
 
     public Completable updateCompletable(Comment comment) {

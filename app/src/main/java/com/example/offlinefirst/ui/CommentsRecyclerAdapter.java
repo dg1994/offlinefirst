@@ -19,6 +19,7 @@ import com.example.offlinefirst.MainActivity;
 import com.example.offlinefirst.R;
 import com.example.offlinefirst.interfaces.ActionListener;
 import com.example.offlinefirst.model.Comment;
+import com.example.offlinefirst.utils.Helper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -60,6 +61,8 @@ public class CommentsRecyclerAdapter extends PagedListAdapter<Comment, CommentsR
             holder.commentDelete.setOnClickListener(v -> {
                 actionListener.onCommentDelete(comment);
             });
+            holder.timeStamp.setText(Helper.Companion.getDate(comment.getTimestamp()));
+            holder.sentBy.setText(comment.getFrom());
         }
     }
 
@@ -73,12 +76,16 @@ public class CommentsRecyclerAdapter extends PagedListAdapter<Comment, CommentsR
         private AppCompatTextView commentText;
         private AppCompatImageView commentDelete;
         private AppCompatImageView commentSent;
+        private AppCompatTextView sentBy;
+        private AppCompatTextView timeStamp;
 
         public CommentViewHolder(final View commentView) {
             super(commentView);
             commentText = commentView.findViewById(R.id.comment);
             commentDelete = commentView.findViewById(R.id.comment_delete);
             commentSent = commentView.findViewById(R.id.comment_sent);
+            sentBy = commentView.findViewById(R.id.sent_by);
+            timeStamp = commentView.findViewById(R.id.timestamp);
         }
 
 
