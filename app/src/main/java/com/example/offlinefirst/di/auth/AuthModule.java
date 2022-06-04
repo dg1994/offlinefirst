@@ -8,11 +8,19 @@ import com.example.offlinefirst.network.auth.AuthService;
 import com.example.offlinefirst.session.SessionManager;
 import com.google.firebase.auth.FirebaseAuth;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
 @Module
 public class AuthModule {
+
+    @AuthScope
+    @Provides
+    static FirebaseAuth provideFirebaseAuth() {
+        return FirebaseAuth.getInstance();
+    }
 
     @AuthScope
     @Provides

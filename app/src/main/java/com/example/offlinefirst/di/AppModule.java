@@ -28,12 +28,6 @@ public class AppModule {
 
     @Singleton
     @Provides
-    static FirebaseAuth provideFirebaseAuth() {
-        return FirebaseAuth.getInstance();
-    }
-
-    @Singleton
-    @Provides
     static FirebaseFirestore provideFirebaseFirestore() {
         return FirebaseFirestore.getInstance();
     }
